@@ -7,7 +7,6 @@ This project is a Django-based API for managing university residence buildings, 
 - CRUD operations for buildings, rooms, and residents
 - RESTful API endpoints
 - Swagger documentation
-- WebSocket support for real-time updates
 
 ## Technologies Used
 
