@@ -1,7 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from resident_api.views import BuildingViewSet, RoomViewSet, ResidentViewSet
+from resident_api.views import (
+    BuildingViewSet,
+    CustomAuthToken,
+    RoomViewSet,
+    ResidentViewSet,
+)
 from django.urls import path, include, re_path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -31,4 +36,5 @@ urlpatterns = [
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
+    path("api-token-auth/", CustomAuthToken.as_view()),
 ]
