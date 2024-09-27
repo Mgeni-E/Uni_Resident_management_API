@@ -7,6 +7,10 @@ This project is a Django-based API for managing university residence buildings, 
 - CRUD operations for buildings, rooms, and residents
 - RESTful API endpoints
 - Swagger documentation
+- Caching
+- Filtering
+- Searching
+- Ordering
 
 ## Technologies Used
 
@@ -14,6 +18,10 @@ This project is a Django-based API for managing university residence buildings, 
 - Django REST Framework
 - drf-yasg (for Swagger documentation)
 - SQLite (default database)
+- pylibmc
+- pymemcache
+- django-filter
+- rest_framework.filters
 
 ## Setup
 
@@ -55,6 +63,11 @@ This project is a Django-based API for managing university residence buildings, 
    ```
 
 ## API Endpoints
+- `/api/token-auth/`: Obtain authentication token
+- Caching: List endpoints for buildings and rooms are cached for 15 minutes
+- Filtering: Endpoints support filtering by various fields (e.g., building name, room capacity, resident check-in date)
+- Searching: Endpoints support searching by specific fields (e.g., room number, resident email)
+- Ordering: Endpoints support ordering by specific fields (e.g., building name, room capacity)
 
 - `/api/buildings/`: CRUD operations for buildings
 - `/api/rooms/`: CRUD operations for rooms
