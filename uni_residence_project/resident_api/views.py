@@ -17,11 +17,28 @@ from django.views.decorators.vary import vary_on_cookie
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope
+
+from rest_framework.views import exception_handler
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def custom_exception_handler(exc, context):
+    response = exception_handler(exc, context)
+
+    if response is not None:
+        response.data["status_code"] = response.status_code
+        logger.error(f"Error: {exc}, Status Code: {response.status_code}")
+
+    return response
+
 
 class BuildingViewSet(viewsets.ModelViewSet):
     queryset = Building.objects.all()
     serializer_class = BuildingSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, TokenHasReadWriteScope]
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
@@ -55,11 +72,18 @@ class BuildingViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
+    def list(self, request, *args, **kwargs):
+        try:
+            return super().list(request, *args, **kwargs)
+        except Exception as e:
+            logger.error(f"Error in BuildingViewSet.list: {str(e)}")
+            return Response({"error": "An unexpected error occurred"}, status=500)
+
 
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, TokenHasReadWriteScope]
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
@@ -93,11 +117,22 @@ class RoomViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
+    def list(self, request, *args, **kwargs):
+        try:
+            return super().list(request, *args, **kwargs)
+        except Exception as e:
+            logger.error(f"Error in BuildingViewSet.list: {str(e)}")
+            return Response({"error": "An unexpected error occurred"}, status=500)
+
 
 class ResidentViewSet(viewsets.ModelViewSet):
     queryset = Resident.objects.all()
     serializer_class = ResidentSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [
+        IsAuthenticated,
+        IsAdminUser,
+        TokenHasReadWriteScope,
+    ]
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
@@ -126,6 +161,13 @@ class ResidentViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        try:
+            return super().list(request, *args, **kwargs)
+        except Exception as e:
+            logger.error(f"Error in BuildingViewSet.list: {str(e)}")
+            return Response({"error": "An unexpected error occurred"}, status=500)
 
 
 from django.http import HttpResponse

@@ -37,4 +37,5 @@ urlpatterns = [
         name="schema-swagger-ui",
     ),
     path("api-token-auth/", CustomAuthToken.as_view()),
+    path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
 ]
