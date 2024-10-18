@@ -7,6 +7,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
+from oauth2_provider.contrib.rest_framework import OAuth2Authentication
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -38,7 +41,15 @@ def custom_exception_handler(exc, context):
 class BuildingViewSet(viewsets.ModelViewSet):
     queryset = Building.objects.all()
     serializer_class = BuildingSerializer
-    permission_classes = [IsAuthenticated, TokenHasReadWriteScope]
+    authentication_classes = [
+        OAuth2Authentication,
+        TokenAuthentication,
+        SessionAuthentication,
+    ]
+    permission_classes = [
+        IsAuthenticated,
+        IsAdminUser,
+    ]  # Allow access to authenticated users
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
@@ -83,7 +94,15 @@ class BuildingViewSet(viewsets.ModelViewSet):
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
-    permission_classes = [IsAuthenticated, TokenHasReadWriteScope]
+    authentication_classes = [
+        OAuth2Authentication,
+        TokenAuthentication,
+        SessionAuthentication,
+    ]
+    permission_classes = [
+        IsAuthenticated,
+        IsAdminUser,
+    ]  # Allow access to authenticated users
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
@@ -128,11 +147,15 @@ class RoomViewSet(viewsets.ModelViewSet):
 class ResidentViewSet(viewsets.ModelViewSet):
     queryset = Resident.objects.all()
     serializer_class = ResidentSerializer
+    authentication_classes = [
+        OAuth2Authentication,
+        TokenAuthentication,
+        SessionAuthentication,
+    ]
     permission_classes = [
         IsAuthenticated,
         IsAdminUser,
-        TokenHasReadWriteScope,
-    ]
+    ]  # Allow access to authenticated users
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
